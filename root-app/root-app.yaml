@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-app
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    # 自分のリポジトリのURLに合わせて書き換えてください
+    # hello-server ではなく hello-apps を参照することに注意
+    repoURL: https://github.com/nojima/hello-apps
+    targetRevision: main
+    # デプロイする Application リソースがあるディレクトリを指定
+    path: hello-server
+    directory:
+      # サブディレクトリにある *.jsonnet もデプロイ対象に含める
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    # ここで指定した namespace よりも各マニフェストに書かれている .metadata.namespace のほうが優先される。
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
