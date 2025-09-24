@@ -24,7 +24,7 @@ function(env, branch)
               },
               {
                 name: 'message',
-                value: 'Hello (%s)' % env,
+                value: 'Hello World (%s)' % env,
               },
             ],
           },
