@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-server
+  # Application リソースは決められた namespace に作成しないといけない。
+  namespace: argocd
+  # Application を消した時にその Application が作成したリソースを削除する。
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    # repoURL は自分のリポジトリのURLに合わせて書き換えてください
+    repoURL: https://github.com/nojima/hello-server
+    # "Revision" という名前だがブランチも指定できる。
+    targetRevision: main
+    # Kubernetes マニフェストを含むディレクトリを指定する。
+    path: kubernetes
+  destination:
+    server: https://kubernetes.default.svc
+    # sync 先の namespace。 metadata のほうの namespace と混同しないように。
+    namespace: hello-server
+  syncPolicy:
+    automated:
+      # prune が true の場合、Git に定義されていないリソースを自動的に削除する。
+      prune: true
+      # selfHeal が true の場合、Git にコミットがないときでも定期的に sync を行う。
+      selfHeal: true
+
