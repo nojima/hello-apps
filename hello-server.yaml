@@ -16,6 +16,11 @@ spec:
     targetRevision: main
     # Kubernetes マニフェストを含むディレクトリを指定する。
     path: kubernetes
+    directory:
+      jsonnet:
+        tlas:
+        - name: "tag"
+          value: "$ARGOCD_APP_REVISION"
   destination:
     server: https://kubernetes.default.svc
     # sync 先の namespace。 metadata のほうの namespace と混同しないように。
